@@ -1,13 +1,17 @@
 <?php
 
+use App\Filament\Resources\Pages\Pages\EditPage;
 use App\Models\Menu;
 use App\Models\MenuItem;
 use App\Models\Page;
 use App\Models\User;
 use App\Support\MenuResolver;
 use App\Support\PageSections;
+use Filament\Actions\Testing\TestAction;
+use Filament\Forms\Components\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
+use Livewire\Livewire;
 use Spatie\Permission\Models\Role;
 
 it('normalizes sections and drops unknown types instead of failing the page', function () {
@@ -136,25 +140,56 @@ it('prevents menu parent cycles', function () {
     expect(fn () => $parent->save())->toThrow(ValidationException::class);
 });
 
-it('opens the page edit form for wrapped builder sections', function () {
+it('opens the page edit form with builder sections collapsed by default', function () {
+    $user = User::factory()->create();
+    Role::firstOrCreate(['name' => 'editor', 'guard_name' => 'web']);
+    $user->assignRole('editor');
+
+    $sections = [
+        ['id' => 'hero', 'type' => 'hero', 'data' => ['title' => 'Halo', 'cta' => ['label' => 'Daftar', 'url' => '/spmb']]],
+        ['id' => 'nilai', 'type' => 'values', 'data' => ['title' => 'Nilai', 'items' => [['icon' => 'heart', 'title' => 'Adab']]]],
+        ['id' => 'statistik', 'type' => 'statistics', 'data' => ['items' => [['label' => 'Siswa', 'value' => '100']]]],
+        ['id' => 'pengurus', 'type' => 'card_grid', 'data' => ['title' => 'Pengurus', 'cards' => [['icon' => 'users', 'title' => 'Ketua', 'description' => 'Memimpin']]]],
+        ['id' => 'faq', 'type' => 'faq', 'data' => ['items' => json_encode([['q' => 'Kapan?', 'a' => '<p>Awal tahun</p>']])]],
+    ];
+
+    $page = Page::factory()->create([
+        'sections' => ['version' => 1, 'sections' => $sections],
+    ]);
+
+    $html = $this->actingAs($user)
+        ->get("/admin/pages/{$page->id}/edit")
+        ->assertOk()
+        ->getContent();
+
+    // Builder memakai ->collapsed(): setiap section tersimpan tampil tertutup.
+    preg_match_all(
+        '/wire:key="[^"]*\.sections\.[0-9a-f\-]{36}\.data\.item"[^>]*x-data="item\(JSON\.parse\(\'\{[^\']*isCollapsed\\\\u0022:(\w+)/s',
+        $html,
+        $matches,
+    );
+
+    expect($matches[1])->toBe(array_fill(0, count($sections), 'true'));
+});
+
+it('expands a newly added builder section', function () {
     $user = User::factory()->create();
     Role::firstOrCreate(['name' => 'editor', 'guard_name' => 'web']);
     $user->assignRole('editor');
 
     $page = Page::factory()->create([
-        'sections' => [
-            'version' => 1,
-            'sections' => [
-                ['id' => 'hero', 'type' => 'hero', 'data' => ['title' => 'Halo', 'cta' => ['label' => 'Daftar', 'url' => '/spmb']]],
-                ['id' => 'nilai', 'type' => 'values', 'data' => ['title' => 'Nilai', 'items' => [['icon' => 'heart', 'title' => 'Adab']]]],
-                ['id' => 'statistik', 'type' => 'statistics', 'data' => ['items' => [['label' => 'Siswa', 'value' => '100']]]],
-                ['id' => 'pengurus', 'type' => 'card_grid', 'data' => ['title' => 'Pengurus', 'cards' => [['icon' => 'users', 'title' => 'Ketua', 'description' => 'Memimpin']]]],
-                ['id' => 'faq', 'type' => 'faq', 'data' => ['items' => json_encode([['q' => 'Kapan?', 'a' => '<p>Awal tahun</p>']])]],
-            ],
-        ],
+        'sections' => ['version' => 1, 'sections' => [['id' => 'hero', 'type' => 'hero', 'data' => ['title' => 'Halo']]]],
     ]);
 
-    $this->actingAs($user)->get("/admin/pages/{$page->id}/edit")->assertOk();
+    $this->actingAs($user);
+
+    Livewire::test(EditPage::class, ['record' => $page->getRouteKey()])
+        ->assertFormFieldExists('sections', 'form', fn (Builder $builder): bool => $builder->isCollapsed())
+        ->callAction(
+            TestAction::make('add')->schemaComponent('sections'),
+            arguments: ['block' => 'hero'],
+        )
+        ->assertFormFieldExists('sections', 'form', fn (Builder $builder): bool => ! $builder->isCollapsed());
 });
 
 it('protects admin routes and role boundaries', function () {

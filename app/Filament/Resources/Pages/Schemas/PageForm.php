@@ -45,7 +45,7 @@ class PageForm
                         Builder::make('sections')
                             ->label('Sections')
                             ->columnSpanFull()
-                            ->collapsible()->cloneable()->reorderableWithButtons()
+                            ->collapsible()->collapsed()->cloneable()->reorderableWithButtons()
                             ->blocks([
                                 Builder\Block::make('hero')->label('Hero')->schema([
                                     TextInput::make('eyebrow')->label('Eyebrow'),
