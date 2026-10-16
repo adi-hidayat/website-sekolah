@@ -13,7 +13,7 @@ import type { MenuNode } from '@/types/cms';
  * diakses keyboard, header sticky, aktif state hijau, CTA SPMB dari
  * konfigurasi.
  */
-const { navigation, siteSettings, admissions, currentUrl } = useSite();
+const { navigation, siteSettings, whatsappCta, currentUrl } = useSite();
 
 const headerMenu = computed<MenuNode[]>(() => navigation.value.header ?? []);
 const logo = computed(() => imageUrl(siteSettings.value.logo));
@@ -156,7 +156,7 @@ onBeforeUnmount(() => {
                 >
                     {{ shortName.charAt(0).toUpperCase() }}
                 </span>
-                <span class="flex flex-col leading-tight">
+                <span class="hidden flex-col leading-tight sm:flex">
                     <span
                         class="font-display text-sm font-bold text-foreground sm:text-base"
                     >
@@ -277,14 +277,14 @@ onBeforeUnmount(() => {
             </nav>
 
             <div class="flex items-center gap-2">
-                <BaseButton
-                    v-if="admissions.active"
-                    :href="admissions.url"
-                    class="hidden sm:inline-flex"
-                    icon="arrow-right"
-                >
-                    {{ admissions.label }}
-                </BaseButton>
+                <div v-if="whatsappCta" class="hidden lg:block">
+                    <BaseButton
+                        :href="whatsappCta.url"
+                        :icon="whatsappCta.icon"
+                    >
+                        {{ whatsappCta.label }}
+                    </BaseButton>
+                </div>
 
                 <button
                     type="button"
@@ -301,7 +301,6 @@ onBeforeUnmount(() => {
         <MobileNavigation
             :open="mobileOpen"
             :items="headerMenu"
-            :admissions="admissions"
             @close="mobileOpen = false"
         />
     </header>

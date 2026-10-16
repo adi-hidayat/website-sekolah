@@ -155,12 +155,6 @@ class PageForm
                                     TextInput::make('title')->label('Judul')->default('Pengumuman'),
                                     TextInput::make('limit')->label('Limit')->numeric()->default(5),
                                 ]),
-                                Builder\Block::make('cta')->label('CTA')->schema([
-                                    TextInput::make('title')->label('Judul')->required()->columnSpanFull(),
-                                    Textarea::make('description')->label('Deskripsi')->rows(2)->columnSpanFull(),
-                                    TextInput::make('button_label')->label('Label Tombol'),
-                                    TextInput::make('button_url')->label('URL Tombol'),
-                                ])->columns(2),
                                 Builder\Block::make('contact')->label('Contact')->schema([
                                     Textarea::make('address')->label('Alamat')->rows(2)->columnSpanFull(),
                                     TextInput::make('phone')->label('Telepon'),

@@ -34,6 +34,8 @@ class GeneralSettings extends Settings
 
     public ?string $phone = null;
 
+    public ?string $whatsapp = null;
+
     public ?string $email = null;
 
     public ?string $website = null;

@@ -137,6 +137,7 @@ export interface SchoolSettings {
     accreditation?: string | null;
     address?: string | null;
     phone?: string | null;
+    whatsapp?: string | null;
     email?: string | null;
     website?: string | null;
     logo?: string | null;

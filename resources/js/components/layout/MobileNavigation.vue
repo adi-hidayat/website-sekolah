@@ -3,7 +3,8 @@ import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import AppIcon from '@/components/ui/AppIcon.vue';
 import BaseButton from '@/components/ui/BaseButton.vue';
-import type { Admissions, MenuNode } from '@/types/cms';
+import { useSite } from '@/composables/useSite';
+import type { MenuNode } from '@/types/cms';
 
 /**
  * Drawer navigasi mobile (PRD 5.2, 9): dapat ditutup dengan Escape,
@@ -12,10 +13,11 @@ import type { Admissions, MenuNode } from '@/types/cms';
 const props = defineProps<{
     open: boolean;
     items: MenuNode[];
-    admissions: Admissions;
 }>();
 
 const emit = defineEmits<{ close: [] }>();
+
+const { whatsappCta } = useSite();
 
 const panel = ref<HTMLElement | null>(null);
 const expanded = ref<number[]>([]);
@@ -177,18 +179,15 @@ const hasItems = computed(() => props.items.length > 0);
                     </p>
                 </nav>
 
-                <div
-                    v-if="admissions.active"
-                    class="border-t border-border p-4"
-                >
+                <div v-if="whatsappCta" class="border-t border-border p-4">
                     <BaseButton
-                        :href="admissions.url"
+                        :href="whatsappCta.url"
                         block
                         size="lg"
-                        icon="arrow-right"
+                        :icon="whatsappCta.icon"
                         @click="emit('close')"
                     >
-                        {{ admissions.label }}
+                        {{ whatsappCta.label }}
                     </BaseButton>
                 </div>
             </div>

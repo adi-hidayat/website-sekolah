@@ -20,6 +20,8 @@ it('persists general settings with website and organization tabs', function () {
         'seo_description' => 'Deskripsi uji untuk SEO.',
         'school_name' => 'SMA Uji Coba',
         'npsn' => '99999999',
+        'phone' => '0721123456',
+        'whatsapp' => '6281234567890',
     ]);
     $settings->save();
 
@@ -28,7 +30,9 @@ it('persists general settings with website and organization tabs', function () {
     expect($fresh->site_name)->toBe('Sekolah Uji')
         ->and($fresh->seo_description)->toBe('Deskripsi uji untuk SEO.')
         ->and($fresh->school_name)->toBe('SMA Uji Coba')
-        ->and($fresh->npsn)->toBe('99999999');
+        ->and($fresh->npsn)->toBe('99999999')
+        ->and($fresh->phone)->toBe('0721123456')
+        ->and($fresh->whatsapp)->toBe('6281234567890');
 });
 
 it('persists customization settings for accent color and fonts', function () {

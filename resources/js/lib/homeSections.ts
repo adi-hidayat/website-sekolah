@@ -86,6 +86,5 @@ export function defaultHomepageSections(): PageSection[] {
         { id: 'prestasi', type: 'achievements', data: {} },
         { id: 'fasilitas', type: 'facilities', data: {} },
         { id: 'galeri', type: 'gallery', data: {} },
-        { id: 'spmb', type: 'cta', data: {} },
     ];
 }

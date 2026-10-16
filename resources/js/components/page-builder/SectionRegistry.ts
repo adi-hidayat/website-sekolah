@@ -8,7 +8,6 @@ import NewsSection from '@/components/sections/NewsSection.vue';
 import AchievementsSection from '@/components/sections/AchievementsSection.vue';
 import FacilitiesSection from '@/components/sections/FacilitiesSection.vue';
 import GallerySection from '@/components/sections/GallerySection.vue';
-import CTASection from '@/components/sections/CTASection.vue';
 import RichTextSection from '@/components/sections/RichTextSection.vue';
 import ImageSection from '@/components/sections/ImageSection.vue';
 import CardGridSection from '@/components/sections/CardGridSection.vue';
@@ -36,7 +35,6 @@ export const sectionRegistry: Record<string, Component> = {
     facilities: FacilitiesSection,
     gallery: GallerySection,
     image_gallery: GallerySection,
-    cta: CTASection,
     rich_text: RichTextSection,
     image: ImageSection,
     card_grid: CardGridSection,

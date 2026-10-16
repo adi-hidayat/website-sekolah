@@ -42,7 +42,6 @@ class PageSeeder extends Seeder
                 ['id' => 'prestasi', 'type' => 'achievements', 'data' => ['eyebrow' => 'Capaian', 'title' => 'Prestasi Terbaru', 'limit' => 6]],
                 ['id' => 'fasilitas', 'type' => 'facilities', 'data' => ['eyebrow' => 'Sarana', 'title' => 'Fasilitas Sekolah', 'limit' => 6]],
                 ['id' => 'galeri', 'type' => 'gallery', 'data' => ['eyebrow' => 'Dokumentasi', 'title' => 'Galeri Kegiatan', 'limit' => 9]],
-                ['id' => 'spmb', 'type' => 'cta', 'data' => []],
             ], true),
 
             $this->page('Profil Sekolah', 'profil', 'default', 'Profil, sejarah, dan identitas SMA Islam Nusantara.', [
@@ -51,13 +50,11 @@ class PageSeeder extends Seeder
                 ['id' => 'nilai', 'type' => 'values', 'data' => ['title' => 'Nilai yang Kami Pegang', 'items' => $this->values()]],
                 ['id' => 'statistik', 'type' => 'statistics', 'data' => []],
                 ['id' => 'fasilitas', 'type' => 'facilities', 'data' => ['title' => 'Fasilitas', 'limit' => 4]],
-                ['id' => 'spmb', 'type' => 'cta', 'data' => []],
             ]),
 
             $this->page('Visi dan Misi', 'visi-misi', 'default', 'Visi dan misi SMA Islam Nusantara.', [
                 ['id' => 'visi-misi', 'type' => 'rich_text', 'data' => ['title' => 'Visi dan Misi', 'html' => $this->visionMission()]],
                 ['id' => 'nilai', 'type' => 'values', 'data' => ['title' => 'Nilai Inti', 'items' => $this->values()]],
-                ['id' => 'spmb', 'type' => 'cta', 'data' => []],
             ]),
 
             $this->page('Struktur Organisasi', 'struktur-organisasi', 'default', 'Struktur organisasi dan kepengurusan sekolah.', [
@@ -78,14 +75,12 @@ class PageSeeder extends Seeder
                 ['id' => 'program', 'type' => 'programs', 'data' => ['title' => 'Program dan Jurusan', 'limit' => 6]],
                 ['id' => 'nilai', 'type' => 'values', 'data' => ['title' => 'Pendekatan Pembelajaran', 'items' => $this->values()]],
                 ['id' => 'statistik', 'type' => 'statistics', 'data' => []],
-                ['id' => 'spmb', 'type' => 'cta', 'data' => []],
             ]),
 
             $this->page('Ekstrakurikuler', 'ekstrakurikuler', 'default', 'Kegiatan pengembangan minat dan bakat peserta didik.', [
                 ['id' => 'pengantar', 'type' => 'rich_text', 'data' => ['title' => 'Ekstrakurikuler', 'html' => '<p>Sekolah menyediakan beragam kegiatan ekstrakurikuler untuk mengembangkan minat, bakat, dan kepemimpinan peserta didik.</p>']],
                 ['id' => 'daftar', 'type' => 'card_grid', 'data' => ['title' => 'Pilihan Kegiatan', 'cards' => $this->extracurriculars()]],
                 ['id' => 'galeri', 'type' => 'gallery', 'data' => ['title' => 'Dokumentasi Kegiatan', 'limit' => 9]],
-                ['id' => 'spmb', 'type' => 'cta', 'data' => []],
             ]),
 
             $this->page('Fasilitas', 'fasilitas', 'default', 'Sarana dan prasarana pendukung pembelajaran.', [
@@ -97,7 +92,6 @@ class PageSeeder extends Seeder
             $this->page('Prestasi', 'prestasi', 'default', 'Capaian peserta didik dan sekolah.', [
                 ['id' => 'prestasi', 'type' => 'achievements', 'data' => ['title' => 'Prestasi Sekolah', 'limit' => 12]],
                 ['id' => 'statistik', 'type' => 'statistics', 'data' => []],
-                ['id' => 'spmb', 'type' => 'cta', 'data' => []],
             ]),
 
             $this->page('Informasi SPMB', 'spmb', 'landing', 'Informasi penerimaan peserta didik baru.', [
@@ -114,7 +108,6 @@ class PageSeeder extends Seeder
                     ['icon' => 'image', 'title' => 'Foto', 'description' => 'Pas foto berwarna ukuran 3x4 sebanyak 4 lembar.'],
                 ]]],
                 ['id' => 'faq', 'type' => 'faq', 'data' => ['title' => 'Pertanyaan Seputar SPMB', 'items' => $this->faq()]],
-                ['id' => 'spmb', 'type' => 'cta', 'data' => ['title' => 'Siap Bergabung?', 'description' => 'Hubungi panitia SPMB untuk informasi pendaftaran dan biaya pendidikan.', 'button_label' => 'Hubungi Panitia', 'button_url' => '/kontak']],
             ]),
 
             $this->page('Kontak', 'kontak', 'contact', 'Hubungi SMA Islam Nusantara.', [
@@ -125,12 +118,10 @@ class PageSeeder extends Seeder
 
             $this->page('FAQ', 'faq', 'default', 'Pertanyaan yang sering diajukan.', [
                 ['id' => 'faq', 'type' => 'faq', 'data' => ['title' => 'Pertanyaan yang Sering Diajukan', 'items' => $this->faq()]],
-                ['id' => 'spmb', 'type' => 'cta', 'data' => ['title' => 'Masih Ada Pertanyaan?', 'description' => 'Tim kami siap membantu menjawab kebutuhan informasi Anda.', 'button_label' => 'Hubungi Sekolah', 'button_url' => '/kontak']],
             ]),
 
             $this->page('Kalender Akademik', 'kalender-akademik', 'default', 'Jadwal kegiatan akademik sekolah.', [
                 ['id' => 'kalender', 'type' => 'rich_text', 'data' => ['title' => 'Kalender Akademik 2026/2027', 'html' => '<ul><li>Juli: Awal tahun ajaran dan masa pengenalan lingkungan sekolah.</li><li>September: Penilaian tengah semester.</li><li>Desember: Penilaian akhir semester dan pembagian rapor.</li><li>Maret: Ujian sekolah dan asesmen nasional.</li><li>Juni: Kelulusan dan wisuda tahfidz.</li></ul>']],
-                ['id' => 'spmb', 'type' => 'cta', 'data' => []],
             ]),
 
             $this->page('Kebijakan Privasi', 'kebijakan-privasi', 'default', 'Kebijakan privasi situs sekolah.', [

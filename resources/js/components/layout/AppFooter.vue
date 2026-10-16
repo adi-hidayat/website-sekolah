@@ -30,12 +30,22 @@ const socialIcons: Record<string, string> = {
     whatsapp: 'whatsapp',
 };
 
-const socials = computed(() =>
-    normalizeSocialLinks(siteSettings.value.social_links).map((link) => ({
-        ...link,
-        icon: socialIcons[link.platform] ?? 'globe',
-    })),
-);
+const socials = computed(() => {
+    const links = normalizeSocialLinks(siteSettings.value.social_links).map(
+        (link) => ({
+            ...link,
+            icon: socialIcons[link.platform] ?? 'globe',
+        }),
+    );
+
+    const wa = whatsappUrl(siteSettings.value.whatsapp);
+
+    if (wa && !links.some((link) => link.platform === 'whatsapp')) {
+        links.push({ platform: 'whatsapp', url: wa, icon: 'whatsapp' });
+    }
+
+    return links;
+});
 
 const year = new Date().getFullYear();
 </script>

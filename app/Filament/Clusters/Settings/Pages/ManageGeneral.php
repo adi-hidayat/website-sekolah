@@ -145,6 +145,11 @@ class ManageGeneral extends Page
                                     ->label('Telepon')
                                     ->tel()
                                     ->maxLength(50),
+                                TextInput::make('whatsapp')
+                                    ->label('Nomor WhatsApp')
+                                    ->tel()
+                                    ->maxLength(50)
+                                    ->helperText('Format: 62812xxxxxxx. Dipakai tombol Hubungi Kami dan ikon media sosial.'),
                                 TextInput::make('email')
                                     ->label('Email')
                                     ->email()

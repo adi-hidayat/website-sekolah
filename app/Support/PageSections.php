@@ -57,7 +57,6 @@ class PageSections
         'card_grid' => ['label' => 'Card Grid'],
         'teachers' => ['label' => 'Teachers'],
         'announcements' => ['label' => 'Announcements'],
-        'cta' => ['label' => 'CTA'],
         'contact' => ['label' => 'Contact'],
         'faq' => ['label' => 'FAQ'],
         'custom_html' => ['label' => 'Custom HTML'],

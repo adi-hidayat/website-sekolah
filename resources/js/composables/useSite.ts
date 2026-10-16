@@ -1,5 +1,6 @@
 import { computed } from 'vue';
 import { usePage } from '@inertiajs/vue3';
+import { whatsappUrl } from '@/lib/format';
 import type {
     Admissions,
     AnnouncementBar,
@@ -38,6 +39,16 @@ const FALLBACK_THEME: SiteTheme = {
 };
 
 /**
+ * Tombol WhatsApp di header/menu mobile: nomor diambil dari pengaturan
+ * "Informasi Organisasi" → Nomor WhatsApp. Null bila nomor belum diisi.
+ */
+export interface WhatsappCta {
+    url: string;
+    label: string;
+    icon: string;
+}
+
+/**
  * Akses tunggal ke props Inertia yang dibagikan (menu, pengaturan, tema,
  * bar pengumuman, status SPMB, dan koleksi section). Komponen tidak boleh
  * mengambil data ini lewat request API berulang (PRD 11).
@@ -65,6 +76,16 @@ export function useSite() {
         () => (page.props.admissions ?? FALLBACK_ADMISSIONS) as Admissions,
     );
 
+    const whatsappCta = computed<WhatsappCta | null>(() => {
+        const wa = whatsappUrl(siteSettings.value.whatsapp);
+
+        if (wa) {
+            return { url: wa, label: 'WhatsApp', icon: 'whatsapp' };
+        }
+
+        return null;
+    });
+
     const collections = computed<PageCollections>(
         () =>
             (page.props.pageCollections ??
@@ -80,6 +101,7 @@ export function useSite() {
         navigation,
         announcementBar,
         admissions,
+        whatsappCta,
         collections,
         currentUrl,
     };

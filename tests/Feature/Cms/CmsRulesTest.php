@@ -52,7 +52,7 @@ it('maps stored sections to builder state and back without losing ids', function
 
     // Simulasi edit admin: ubah title, tambah item baru.
     $builder[0]['data']['title'] = 'Halo Baru';
-    $builder[] = ['type' => 'cta', 'data' => ['title' => 'Join']];
+    $builder[] = ['type' => 'contact', 'data' => ['address' => 'Jl. Uji']];
 
     $saved = PageSections::storedFromBuilderState($builder, $stored);
 
@@ -64,7 +64,7 @@ it('maps stored sections to builder state and back without losing ids', function
         ->and($saved['sections'][0]['data']['cta'])->toBe(['label' => 'Daftar', 'url' => '/spmb'])
         ->and($saved['sections'][1]['id'])->toBe('nilai')
         ->and($saved['sections'][1]['data']['items'])->toBe([['icon' => 'heart', 'title' => 'Adab']])
-        ->and($saved['sections'][2]['id'])->toBe('cta-3');
+        ->and($saved['sections'][2]['id'])->toBe('contact-3');
 });
 
 it('normalizes section record lists for repeater fields', function () {
