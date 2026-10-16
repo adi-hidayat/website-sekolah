@@ -33,8 +33,11 @@ class PageForm
                             ->required()->maxLength(255)->alphaDash()
                             ->unique(ignoreRecord: true),
                         Textarea::make('excerpt')->columnSpanFull()->rows(2),
-                        RichEditor::make('content')->columnSpanFull(),
-                        FileUpload::make('featured_image')->image()->disk('public')->directory('pages')->columnSpanFull(),
+                        RichEditor::make('content')->columnSpanFull()
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsDirectory('pages/content')
+                            ->fileAttachmentsVisibility('public'),
+                        FileUpload::make('featured_image')->image()->disk('public')->directory('pages')->visibility('public')->maxSize(2048)->columnSpanFull(),
                     ])->columns(2),
 
                     Tab::make('Page Builder')->schema([
@@ -47,7 +50,7 @@ class PageForm
                                     TextInput::make('eyebrow')->label('Eyebrow'),
                                     TextInput::make('title')->label('Judul')->required(),
                                     Textarea::make('description')->label('Deskripsi')->rows(2)->columnSpanFull(),
-                                    TextInput::make('image')->label('Gambar (URL/storage)')->columnSpanFull(),
+                                    FileUpload::make('image')->label('Gambar')->image()->disk('public')->directory('pages/hero')->visibility('public')->maxSize(2048)->columnSpanFull(),
                                     TextInput::make('cta.label')->label('Label CTA'),
                                     TextInput::make('cta.url')->label('URL CTA'),
                                     TextInput::make('secondary.label')->label('Label CTA sekunder'),
@@ -58,22 +61,27 @@ class PageForm
                                     TextInput::make('title')->label('Judul'),
                                     TextInput::make('name')->label('Nama'),
                                     TextInput::make('position')->label('Jabatan'),
-                                    TextInput::make('photo')->label('Foto (URL/storage)')->columnSpanFull(),
-                                    RichEditor::make('message')->label('Sambutan')->columnSpanFull(),
+                                    FileUpload::make('photo')->label('Foto')->image()->disk('public')->directory('pages/principal')->visibility('public')->maxSize(2048)->columnSpanFull(),
+                                    RichEditor::make('message')->label('Sambutan')->columnSpanFull()
+                                        ->fileAttachmentsDisk('public')
+                                        ->fileAttachmentsDirectory('pages/content')
+                                        ->fileAttachmentsVisibility('public'),
                                     TextInput::make('cta_label')->label('Label CTA'),
                                     TextInput::make('cta_url')->label('URL CTA'),
                                 ])->columns(2),
                                 Builder\Block::make('rich_text')->label('Rich Text')->schema([
-                                    RichEditor::make('html')->label('Konten')->columnSpanFull(),
+                                    RichEditor::make('html')->label('Konten')->columnSpanFull()
+                                        ->fileAttachmentsDisk('public')
+                                        ->fileAttachmentsDirectory('pages/content')
+                                        ->fileAttachmentsVisibility('public'),
                                 ]),
                                 Builder\Block::make('image')->label('Image')->schema([
-                                    TextInput::make('src')->label('Src')->required()->columnSpanFull(),
+                                    FileUpload::make('src')->label('Gambar')->image()->disk('public')->directory('pages/images')->visibility('public')->maxSize(2048)->required()->columnSpanFull(),
                                     TextInput::make('caption')->label('Caption'),
                                     Select::make('alignment')->options(['left' => 'Kiri', 'center' => 'Tengah', 'right' => 'Kanan'])->default('center'),
                                 ])->columns(2),
                                 Builder\Block::make('image_gallery')->label('Image Gallery')->schema([
-                                    Textarea::make('images')->label('Daftar URL (satu per baris)')->rows(3)->columnSpanFull()
-                                        ->formatStateUsing(fn (mixed $state): ?string => PageSections::editableText($state)),
+                                    FileUpload::make('images')->label('Gambar')->multiple()->reorderable()->image()->disk('public')->directory('pages/galleries')->visibility('public')->maxSize(2048)->columnSpanFull(),
                                 ])->columns(1),
                                 Builder\Block::make('card_grid')->label('Card Grid')->schema([
                                     TextInput::make('title')->label('Judul')->columnSpanFull(),
@@ -104,8 +112,7 @@ class PageForm
                                     TextInput::make('title')->label('Judul')->default('Galeri Kegiatan'),
                                     TextInput::make('limit')->label('Limit (dari album galeri)')->numeric()->default(12),
                                     Textarea::make('description')->label('Deskripsi')->rows(2)->columnSpanFull(),
-                                    Textarea::make('images')->label('Daftar URL gambar (satu per baris)')->rows(3)->columnSpanFull()
-                                        ->formatStateUsing(fn (mixed $state): ?string => PageSections::editableText($state)),
+                                    FileUpload::make('images')->label('Gambar kustom (opsional)')->multiple()->reorderable()->image()->disk('public')->directory('pages/galleries')->visibility('public')->maxSize(2048)->columnSpanFull(),
                                 ])->columns(2),
                                 Builder\Block::make('news')->label('News')->schema([
                                     TextInput::make('title')->label('Judul')->default('Berita dan Kegiatan'),

@@ -79,6 +79,13 @@ class PageSections
             $id = (string) ($section['id'] ?? $type.'-'.($index + 1));
             $data = is_array($section['data'] ?? null) ? $section['data'] : [];
 
+            // Galeri memakai FileUpload multiple (array). Normalisasi warisan
+            // textarea satu-URL-per-baris / JSON menjadi array agar renderer
+            // dan form admin konsisten.
+            if (in_array($type, ['image_gallery', 'gallery'], true) && array_key_exists('images', $data)) {
+                $data['images'] = self::normalizeImageList($data['images']);
+            }
+
             // Keamanan: jangan pernah simpan JS bebas dari CMS.
             if ($type === 'custom_html') {
                 $data['html'] = self::sanitizeHtml((string) ($data['html'] ?? ''));
@@ -95,6 +102,8 @@ class PageSections
      *
      * Kolom DB memakai bentuk {version, sections:[{id,type,data}]},
      * sedangkan Builder Filament butuh list [{type,data}].
+     * Daftar gambar dinormalisasi ke array agar FileUpload multiple
+     * bisa menampilkan data warisan (string satu-per-baris).
      *
      * @return array<int, array{type:string, data:array<string,mixed>}>
      */
@@ -149,7 +158,7 @@ class PageSections
 
             $data = is_array($item['data'] ?? null) ? $item['data'] : [];
             if ($previous !== null) {
-                $data = array_replace_recursive($previous['data'], $data);
+                $data = self::mergeSectionData($previous['data'], $data);
             }
 
             $merged[] = [
@@ -161,6 +170,116 @@ class PageSections
 
         // Lewatkan normalize() agar custom_html tersanitasi & bentuk konsisten.
         return self::normalize($merged);
+    }
+
+    /**
+     * Normalisasi daftar gambar galeri ke array path/URL.
+     *
+     * Menerima warisan textarea (satu URL per baris / koma), JSON string,
+     * array string, maupun array objek {src,url,image}. Selalu kembalikan
+     * list berurutan agar cocok dengan FileUpload multiple dan renderer
+     * frontend (toStringList).
+     *
+     * @return list<string>
+     */
+    public static function normalizeImageList(mixed $value): array
+    {
+        if ($value === null || $value === '') {
+            return [];
+        }
+
+        if (is_string($value)) {
+            $trimmed = trim($value);
+
+            if ($trimmed === '') {
+                return [];
+            }
+
+            if (str_starts_with($trimmed, '[')) {
+                $decoded = json_decode($trimmed, true);
+
+                if (is_array($decoded)) {
+                    return self::normalizeImageList($decoded);
+                }
+            }
+
+            $parts = preg_split('/\r?\n|,/', $trimmed);
+
+            if ($parts === false) {
+                return [];
+            }
+
+            return array_values(array_filter(
+                array_map(fn (string $part): string => trim($part), $parts),
+                fn (string $part): bool => $part !== ''
+            ));
+        }
+
+        if (is_array($value)) {
+            $output = [];
+
+            foreach ($value as $item) {
+                if (is_string($item)) {
+                    $trimmed = trim($item);
+
+                    if ($trimmed !== '') {
+                        $output[] = $trimmed;
+                    }
+                } elseif (is_scalar($item) && $item !== null) {
+                    $trimmed = trim((string) $item);
+
+                    if ($trimmed !== '') {
+                        $output[] = $trimmed;
+                    }
+                } elseif (is_array($item)) {
+                    $src = $item['src'] ?? $item['url'] ?? $item['image'] ?? null;
+
+                    if (is_string($src) && trim($src) !== '') {
+                        $output[] = trim($src);
+                    }
+                }
+            }
+
+            return array_values($output);
+        }
+
+        return [];
+    }
+
+    /**
+     * Gabung data section lama dengan input Builder baru.
+     *
+     * Key yang tidak dimodelkan di form dipertahankan, tetapi list
+     * berurutan (mis. images dari FileUpload multiple) diganti utuh agar
+     * hapus/reorder benar-benar tersimpan. array_replace_recursive
+     * mempertahankan sisa item lama berdasarkan indeks numerik.
+     *
+     * @param  array<string, mixed>  $previous
+     * @param  array<string, mixed>  $current
+     * @return array<string, mixed>
+     */
+    private static function mergeSectionData(array $previous, array $current): array
+    {
+        $merged = $previous;
+
+        foreach ($current as $key => $value) {
+            if (is_array($value) && array_is_list($value)) {
+                $merged[$key] = array_values($value);
+
+                continue;
+            }
+
+            if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])
+                && ! array_is_list($merged[$key]) && ! array_is_list($value)) {
+                $merged[$key] = array_replace_recursive($merged[$key], $value);
+
+                continue;
+            }
+
+            $merged[$key] = $value;
+        }
+
+        return $merged;
     }
 
     /**
