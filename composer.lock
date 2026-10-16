@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "be1fea0fb1898f7afcda37ea3e8c0508",
+    "content-hash": "a4b98f205d902171e3f3cf0c2785a97f",
     "packages": [
         {
             "name": "alfianm/filament-login-kit",
@@ -13476,5 +13476,8 @@
         "php": "^8.3"
     },
     "platform-dev": {},
+    "platform-overrides": {
+        "php": "8.3"
+    },
     "plugin-api-version": "2.9.0"
 }
