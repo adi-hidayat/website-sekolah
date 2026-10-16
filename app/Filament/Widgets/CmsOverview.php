@@ -11,6 +11,8 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class CmsOverview extends StatsOverviewWidget
 {
+    protected static bool $isLazy = false;
+
     protected function getStats(): array
     {
         return [

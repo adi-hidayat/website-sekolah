@@ -8,6 +8,7 @@ enum MenuItemType: string
     case Department = 'department';
     case News = 'news';
     case Announcement = 'announcement';
+    case Gallery = 'gallery';
     case CustomUrl = 'custom_url';
     case Dropdown = 'dropdown';
 
@@ -18,6 +19,7 @@ enum MenuItemType: string
             self::Department => 'Jurusan',
             self::News => 'Berita',
             self::Announcement => 'Pengumuman',
+            self::Gallery => 'Galeri',
             self::CustomUrl => 'URL Khusus',
             self::Dropdown => 'Dropdown',
         };
@@ -27,5 +29,17 @@ enum MenuItemType: string
     public static function values(): array
     {
         return array_column(self::cases(), 'value');
+    }
+
+    /** @return array<string, string> */
+    public static function options(): array
+    {
+        $options = [];
+
+        foreach (self::cases() as $case) {
+            $options[$case->value] = $case->label();
+        }
+
+        return $options;
     }
 }

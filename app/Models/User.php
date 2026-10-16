@@ -13,7 +13,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Laravel\Sanctum\HasApiTokens;
-use Spatie\Permission\Traits\HasRoles;
 
 /**
  * @property int $id
@@ -30,7 +29,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<UserFactory> */
-    use HasApiTokens, HasFactory, HasRoles, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * Get the attributes that should be cast.
@@ -45,24 +44,11 @@ class User extends Authenticatable implements FilamentUser
         ];
     }
 
+    /**
+     * Semua pengguna terautentikasi boleh mengakses panel admin (tanpa peran/izin).
+     */
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->hasAnyRole(['super_admin', 'administrator', 'editor', 'kontributor', 'viewer'])
-            || $this->email === config('app.admin_email');
-    }
-
-    /**
-     * @param  list<string>  $requestedRoles
-     */
-    public function cannotElevateSelf(array $requestedRoles): bool
-    {
-        if (! $this->exists) {
-            return false;
-        }
-
-        $privileged = ['super_admin', 'administrator'];
-
-        return collect($requestedRoles)->intersect($privileged)->isNotEmpty()
-            && ! $this->hasRole('super_admin');
+        return true;
     }
 }

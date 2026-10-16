@@ -8,7 +8,6 @@ use App\Settings\CustomizationSettings;
 use App\Settings\GeneralSettings;
 use App\Support\SitePresentation;
 use Inertia\Testing\AssertableInertia;
-use Spatie\Permission\Models\Role;
 
 it('persists general settings with website and organization tabs', function () {
     $settings = app(GeneralSettings::class);
@@ -74,16 +73,12 @@ it('registers the settings cluster with general and customization pages', functi
     expect(ManageGeneral::getCluster())->toBe(SettingsCluster::class)
         ->and(ManageCustomization::getCluster())->toBe(SettingsCluster::class)
         ->and(SettingsCluster::getClusteredComponents())->toContain(ManageGeneral::class)
-        ->and(SettingsCluster::getClusteredComponents())->toContain(ManageCustomization::class);
+        ->and(SettingsCluster::getClusteredComponents())->toContain(ManageCustomization::class)
+        ->and(SettingsCluster::getNavigationGroup())->toBe('Pengaturan');
 });
 
 it('renders the settings pages for admins', function () {
-    Role::firstOrCreate(['name' => 'super_admin', 'guard_name' => 'web']);
-
-    $user = User::factory()->create();
-    $user->assignRole('super_admin');
-
-    $this->actingAs($user);
+    $this->actingAs(User::factory()->create());
 
     $this->get(ManageGeneral::getUrl())->assertOk();
     $this->get(ManageCustomization::getUrl())->assertOk();

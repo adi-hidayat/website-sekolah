@@ -12,7 +12,6 @@ use Filament\Forms\Components\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
 use Livewire\Livewire;
-use Spatie\Permission\Models\Role;
 
 it('normalizes sections and drops unknown types instead of failing the page', function () {
     $normalized = PageSections::normalize([
@@ -142,8 +141,6 @@ it('prevents menu parent cycles', function () {
 
 it('opens the page edit form with builder sections collapsed by default', function () {
     $user = User::factory()->create();
-    Role::firstOrCreate(['name' => 'editor', 'guard_name' => 'web']);
-    $user->assignRole('editor');
 
     $sections = [
         ['id' => 'hero', 'type' => 'hero', 'data' => ['title' => 'Halo', 'cta' => ['label' => 'Daftar', 'url' => '/spmb']]],
@@ -174,8 +171,6 @@ it('opens the page edit form with builder sections collapsed by default', functi
 
 it('expands a newly added builder section', function () {
     $user = User::factory()->create();
-    Role::firstOrCreate(['name' => 'editor', 'guard_name' => 'web']);
-    $user->assignRole('editor');
 
     $page = Page::factory()->create([
         'sections' => ['version' => 1, 'sections' => [['id' => 'hero', 'type' => 'hero', 'data' => ['title' => 'Halo']]]],
@@ -192,10 +187,6 @@ it('expands a newly added builder section', function () {
         ->assertFormFieldExists('sections', 'form', fn (Builder $builder): bool => ! $builder->isCollapsed());
 });
 
-it('protects admin routes and role boundaries', function () {
+it('protects admin routes', function () {
     $this->get('/admin')->assertRedirect('/admin/login');
-
-    $user = User::factory()->create();
-    $this->assertFalse($user->cannotElevateSelf(['viewer']));
-    $this->assertTrue($user->cannotElevateSelf(['super_admin']));
 });

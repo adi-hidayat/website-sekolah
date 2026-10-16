@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Menus;
 
+use App\Filament\Clusters\Menu\MenuCluster;
 use App\Filament\Resources\Menus\Pages\CreateMenu;
 use App\Filament\Resources\Menus\Pages\EditMenu;
 use App\Filament\Resources\Menus\Pages\ListMenus;
@@ -13,7 +14,6 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class MenuResource extends Resource
 {
@@ -21,7 +21,7 @@ class MenuResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBars3;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Pengaturan';
+    protected static ?string $cluster = MenuCluster::class;
 
     protected static ?int $navigationSort = 1;
 

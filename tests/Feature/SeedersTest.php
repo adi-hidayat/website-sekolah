@@ -38,7 +38,6 @@ it('creates the requested admin account with working credentials', function () {
     $admin = User::where('email', 'admin@example.com')->first();
 
     expect($admin)->not->toBeNull()
-        ->and($admin->hasRole('super_admin'))->toBeTrue()
         ->and(Hash::check('12345678', $admin->password))->toBeTrue();
 });
 

@@ -55,8 +55,9 @@ class MenuSeeder extends Seeder
             ->delete();
 
         $this->item($menu, 'Berita', ['type' => 'news'], null, 5);
+        $this->item($menu, 'Galeri', ['type' => 'gallery'], null, 6);
 
-        $informasi = $this->item($menu, 'Informasi', ['type' => 'dropdown'], null, 6);
+        $informasi = $this->item($menu, 'Informasi', ['type' => 'dropdown'], null, 7);
         $this->item($menu, 'Pengumuman', ['type' => 'announcement'], $informasi->id, 1);
         $this->item($menu, 'SPMB', ['type' => 'page', 'page_id' => $this->pageId('spmb')], $informasi->id, 2);
         $this->item($menu, 'FAQ', ['type' => 'page', 'page_id' => $this->pageId('faq')], $informasi->id, 3);
@@ -71,6 +72,7 @@ class MenuSeeder extends Seeder
             ['Program Jurusan', 'custom_url', null],
             ['Berita', 'news', null],
             ['Pengumuman', 'announcement', null],
+            ['Galeri', 'gallery', null],
             ['Fasilitas', 'page', 'fasilitas'],
             ['Prestasi', 'page', 'prestasi'],
             ['Informasi SPMB', 'page', 'spmb'],

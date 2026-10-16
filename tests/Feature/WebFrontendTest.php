@@ -2,6 +2,8 @@
 
 use App\Models\Announcement;
 use App\Models\Department;
+use App\Models\Gallery;
+use App\Models\GalleryItem;
 use App\Models\News;
 use App\Models\NewsCategory;
 use App\Models\Page;
@@ -101,4 +103,34 @@ it('renders a published cms page with its sections', function () {
             ->where('page.slug', 'profil-sekolah')
             ->has('page.sections', 1)
             ->where('page.sections.0.type', 'principal'));
+});
+
+it('renders the gallery index and detail pages', function () {
+    $gallery = Gallery::factory()->create(['slug' => 'wisuda-tahfidz']);
+    GalleryItem::factory()->count(2)->create(['gallery_id' => $gallery->id]);
+
+    $this->get(route('galleries.index'))
+        ->assertOk()
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->component('GalleryIndex')
+            ->has('galleries.data', 1)
+            ->where('galleries.data.0.items_count', 2));
+
+    $this->get(route('galleries.show', ['slug' => 'wisuda-tahfidz']))
+        ->assertOk()
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->component('GalleryDetail')
+            ->where('gallery.slug', 'wisuda-tahfidz')
+            ->has('gallery.items', 2));
+});
+
+it('hides unpublished galleries from public routes', function () {
+    Gallery::factory()->draft()->create(['slug' => 'album-draft']);
+
+    $this->get(route('galleries.index'))
+        ->assertOk()
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->has('galleries.data', 0));
+
+    $this->get(route('galleries.show', ['slug' => 'album-draft']))->assertNotFound();
 });

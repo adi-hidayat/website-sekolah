@@ -103,6 +103,7 @@ export interface Gallery {
     description: string | null;
     cover_image: string | null;
     items?: GalleryItem[];
+    items_count?: number;
 }
 
 export interface Announcement {

@@ -44,7 +44,7 @@ class SiteController extends Controller
                 return [];
             }
 
-            $items = $menu->items()->with(['page', 'department'])->get();
+            $items = $menu->items()->with(['page', 'department', 'news', 'announcement', 'gallery'])->get();
 
             return MenuResolver::tree($items);
         });

@@ -4,18 +4,17 @@ namespace App\Providers;
 
 use App\Models\Menu;
 use App\Models\MenuItem;
-use App\Models\News;
 use App\Models\Page;
+use App\Models\User;
 use App\Observers\MenuItemObserver;
 use App\Observers\PageObserver;
-use App\Policies\ContentPolicy;
+use App\Observers\UserObserver;
 use App\Support\MenuResolver;
 use App\Support\SitePresentation;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 use Inertia\ExceptionResponse;
@@ -38,7 +37,6 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
         $this->registerObservers();
-        $this->registerPolicies();
         $this->shareInertiaProps();
         $this->configureErrorPages();
     }
@@ -92,14 +90,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Page::observe(PageObserver::class);
         MenuItem::observe(MenuItemObserver::class);
-    }
-
-    protected function registerPolicies(): void
-    {
-        Gate::policy(Page::class, ContentPolicy::class);
-        Gate::policy(News::class, ContentPolicy::class);
-        Gate::policy(Menu::class, ContentPolicy::class);
-        Gate::policy(MenuItem::class, ContentPolicy::class);
+        User::observe(UserObserver::class);
     }
 
     protected function shareInertiaProps(): void
@@ -114,7 +105,7 @@ class AppServiceProvider extends ServiceProvider
                                 return [];
                             }
 
-                            return MenuResolver::tree($menu->items()->with(['page', 'department'])->get());
+                            return MenuResolver::tree($menu->items()->with(['page', 'department', 'news', 'announcement', 'gallery'])->get());
                         });
                     };
 

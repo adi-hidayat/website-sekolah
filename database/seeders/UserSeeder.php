@@ -10,7 +10,7 @@ class UserSeeder extends Seeder
     public const DEFAULT_PASSWORD = '12345678';
 
     /**
-     * Akun admin dan akun contoh untuk setiap peran (PRD §13).
+     * Akun admin dan akun contoh untuk pengelolaan konten.
      */
     public function run(): void
     {
@@ -19,42 +19,21 @@ class UserSeeder extends Seeder
                 'email' => 'admin@example.com',
                 'name' => 'Administrator Sekolah',
                 'password' => self::DEFAULT_PASSWORD,
-                'role' => 'super_admin',
             ],
             [
                 'email' => 'admin@smanusantara.sch.id',
                 'name' => 'Administrator',
                 'password' => 'password',
-                'role' => 'super_admin',
-            ],
-            [
-                'email' => 'administrator@example.com',
-                'name' => 'Wakil Kepala Sekolah',
-                'password' => self::DEFAULT_PASSWORD,
-                'role' => 'administrator',
             ],
             [
                 'email' => 'editor@example.com',
                 'name' => 'Editor Konten',
                 'password' => self::DEFAULT_PASSWORD,
-                'role' => 'editor',
-            ],
-            [
-                'email' => 'kontributor@example.com',
-                'name' => 'Kontributor Berita',
-                'password' => self::DEFAULT_PASSWORD,
-                'role' => 'kontributor',
-            ],
-            [
-                'email' => 'viewer@example.com',
-                'name' => 'Pengamat Data',
-                'password' => self::DEFAULT_PASSWORD,
-                'role' => 'viewer',
             ],
         ];
 
         foreach ($accounts as $account) {
-            $user = User::updateOrCreate(
+            User::updateOrCreate(
                 ['email' => $account['email']],
                 [
                     'name' => $account['name'],
@@ -62,8 +41,6 @@ class UserSeeder extends Seeder
                     'email_verified_at' => now(),
                 ],
             );
-
-            $user->syncRoles([$account['role']]);
         }
     }
 }
