@@ -33,6 +33,7 @@ class AchievementForm
                                 Select::make('department_id')
                                     ->relationship('department', 'name'),
                                 FileUpload::make('image')
+                                    ->disk('public')
                                     ->image(),
                             ])
                             ->columns(2),

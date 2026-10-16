@@ -24,6 +24,7 @@ class GalleryForm
                         Textarea::make('description')
                             ->columnSpanFull(),
                         FileUpload::make('cover_image')
+                            ->disk('public')
                             ->image(),
                         Toggle::make('is_published')
                             ->required(),

@@ -34,9 +34,11 @@ class NewsForm
                                 RichEditor::make('content')
                                     ->label('Isi Berita')
                                     ->required()
+                                    ->fileAttachmentsDisk('public')
                                     ->fileAttachmentsDirectory('news/content')
                                     ->columnSpanFull(),
                                 FileUpload::make('featured_image')
+                                    ->disk('public')
                                     ->image(),
                                 TextInput::make('gallery'),
                             ])

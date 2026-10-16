@@ -34,7 +34,7 @@ class PageForm
                             ->unique(ignoreRecord: true),
                         Textarea::make('excerpt')->columnSpanFull()->rows(2),
                         RichEditor::make('content')->columnSpanFull(),
-                        FileUpload::make('featured_image')->image()->directory('pages')->columnSpanFull(),
+                        FileUpload::make('featured_image')->image()->disk('public')->directory('pages')->columnSpanFull(),
                     ])->columns(2),
 
                     Tab::make('Page Builder')->schema([

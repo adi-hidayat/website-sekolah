@@ -24,6 +24,7 @@ class FacilityForm
                         Textarea::make('description')
                             ->columnSpanFull(),
                         FileUpload::make('image')
+                            ->disk('public')
                             ->image(),
                         TextInput::make('icon'),
                         TextInput::make('sort_order')
