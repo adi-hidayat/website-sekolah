@@ -1,0 +1,110 @@
+openapi: 3.0.3
+info:
+    title: SMA Nusantara Public API
+    version: 1.0.0
+    description: Kontrak API publik website sekolah (PRD section 10). Prefix /api/v1.
+servers:
+    - url: /api/v1
+paths:
+    /site-settings:
+        get:
+            summary: Konfigurasi website
+            responses:
+                '200':
+                    description: OK
+    /menus/{location}:
+        get:
+            summary: Navigasi header/footer
+            parameters:
+                - name: location
+                  in: path
+                  required: true
+                  schema: { type: string }
+            responses:
+                '200':
+                    description: OK
+    /pages/{slug}:
+        get:
+            summary: Detail halaman CMS published
+            parameters:
+                - name: slug
+                  in: path
+                  required: true
+                  schema: { type: string }
+            responses:
+                '200':
+                    description: OK
+                '404':
+                    description: Tidak ditemukan
+    /departments:
+        get:
+            summary: Daftar jurusan published
+            responses:
+                '200':
+                    description: OK
+    /departments/{slug}:
+        get:
+            summary: Detail jurusan
+            responses:
+                '200':
+                    description: OK
+                '404':
+                    description: Tidak ditemukan
+    /news:
+        get:
+            summary: Daftar berita (search, category, tag, per_page, pagination)
+            parameters:
+                - name: search
+                  in: query
+                  schema: { type: string }
+                - name: category
+                  in: query
+                  schema: { type: string }
+                - name: tag
+                  in: query
+                  schema: { type: string }
+            responses:
+                '200':
+                    description: OK
+    /news/{slug}:
+        get:
+            summary: Detail berita + related
+            responses:
+                '200':
+                    description: OK
+    /news-categories:
+        get:
+            summary: Kategori berita
+            responses:
+                '200':
+                    description: OK
+    /announcements:
+        get:
+            summary: Daftar pengumuman aktif
+            responses:
+                '200':
+                    description: OK
+    /announcements/{slug}:
+        get:
+            summary: Detail pengumuman
+            responses:
+                '200':
+                    description: OK
+    /facilities:
+        get:
+            summary: Daftar fasilitas
+            responses:
+                '200':
+                    description: OK
+    /achievements:
+        get:
+            summary: Daftar prestasi
+            responses:
+                '200':
+                    description: OK
+    /galleries:
+        get:
+            summary: Daftar galeri
+            responses:
+                '200':
+                    description: OK

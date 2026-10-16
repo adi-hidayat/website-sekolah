@@ -1,0 +1,182 @@
+﻿composer : Loading composer repositories with package information
+At line:1 char:1
++ composer update --no-interaction 2>&1 | Out-File -FilePath composer-u ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Loading compose...age information:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Updating dependencies
+Lock file operations: 43 installs, 0 updates, 0 removals
+  - Locking alfianm/filament-login-kit (v1.1.0)
+  - Locking anourvalar/eloquent-serialize (1.3.12)
+  - Locking blade-ui-kit/blade-heroicons (2.7.0)
+  - Locking blade-ui-kit/blade-icons (1.10.1)
+  - Locking chillerlan/php-qrcode (5.0.5)
+  - Locking chillerlan/php-settings-container (3.3.0)
+  - Locking composer/class-map-generator (1.8.0)
+  - Locking composer/pcre (3.4.0)
+  - Locking crumbls/layup (v1.6.2)
+  - Locking danharrin/date-format-converter (v0.3.1)
+  - Locking danharrin/livewire-rate-limiting (v2.3.0)
+  - Locking filament/actions (v5.10.2)
+  - Locking filament/filament (v5.10.2)
+  - Locking filament/forms (v5.10.2)
+  - Locking filament/infolists (v5.10.2)
+  - Locking filament/notifications (v5.10.2)
+  - Locking filament/query-builder (v5.10.2)
+  - Locking filament/schemas (v5.10.2)
+  - Locking filament/support (v5.10.2)
+  - Locking filament/tables (v5.10.2)
+  - Locking filament/widgets (v5.10.2)
+  - Locking kirschbaum-development/eloquent-power-joins (4.3.5)
+  - Locking league/csv (9.28.0)
+  - Locking league/uri-components (7.8.1)
+  - Locking livewire/livewire (v4.4.7)
+  - Locking maennchen/zipstream-php (3.2.2)
+  - Locking nette/php-generator (v4.2.2)
+  - Locking openspout/openspout (v4.32.0)
+  - Locking paragonie/constant_time_encoding (v3.1.3)
+  - Locking pragmarx/google2fa (v9.1.0)
+  - Locking pragmarx/google2fa-qrcode (v4.0.0)
+  - Locking ryangjchandler/blade-capture-directive (v1.1.1)
+  - Locking scrivo/highlight.php (v9.18.1.10)
+  - Locking spatie/image (3.9.7)
+  - Locking spatie/image-optimizer (1.10.0)
+  - Locking spatie/invade (2.1.1)
+  - Locking spatie/laravel-medialibrary (11.23.9)
+  - Locking spatie/laravel-package-tools (1.93.3)
+  - Locking spatie/laravel-permission (6.25.0)
+  - Locking spatie/shiki-php (2.4.0)
+  - Locking spatie/temporary-directory (2.4.0)
+  - Locking symfony/html-sanitizer (v8.1.8)
+  - Locking ueberdosis/tiptap-php (2.2.0)
+Writing lock file
+Installing dependencies from lock file (including require-dev)
+Package operations: 43 installs, 0 updates, 0 removals
+  - Downloading filament/support (v5.10.2)
+  - Downloading filament/actions (v5.10.2)
+  - Downloading filament/notifications (v5.10.2)
+  - Downloading filament/schemas (v5.10.2)
+  - Downloading filament/infolists (v5.10.2)
+  - Downloading filament/forms (v5.10.2)
+  - Downloading filament/widgets (v5.10.2)
+  - Downloading filament/query-builder (v5.10.2)
+  - Downloading filament/tables (v5.10.2)
+  - Downloading filament/filament (v5.10.2)
+  - Downloading alfianm/filament-login-kit (v1.1.0)
+  - Downloading crumbls/layup (v1.6.2)
+  - Downloading spatie/image-optimizer (1.10.0)
+  - Downloading spatie/image (3.9.7)
+  - Downloading spatie/laravel-medialibrary (11.23.9)
+  - Downloading spatie/laravel-permission (6.25.0)
+  0/16 [>---------------------------]   0%
+  1/16 [=>--------------------------]   6%
+  2/16 [===>------------------------]  12%
+  4/16 [=======>--------------------]  25%
+  5/16 [========>-------------------]  31%
+  8/16 [==============>-------------]  50%
+ 11/16 [===================>--------]  68%
+ 12/16 [=====================>------]  75%
+ 13/16 [======================>-----]  81%
+ 15/16 [==========================>-]  93%
+ 16/16 [============================] 100%
+  - Installing spatie/laravel-package-tools (1.93.3): Extracting archive
+  - Installing paragonie/constant_time_encoding (v3.1.3): Extracting archive
+  - Installing pragmarx/google2fa (v9.1.0): Extracting archive
+  - Installing pragmarx/google2fa-qrcode (v4.0.0): Extracting archive
+  - Installing symfony/html-sanitizer (v8.1.8): Extracting archive
+  - Installing spatie/invade (2.1.1): Extracting archive
+  - Installing ryangjchandler/blade-capture-directive (v1.1.1): Extracting archive
+  - Installing nette/php-generator (v4.2.2): Extracting archive
+  - Installing livewire/livewire (v4.4.7): Extracting archive
+  - Installing league/uri-components (7.8.1): Extracting archive
+  - Installing kirschbaum-development/eloquent-power-joins (4.3.5): Extracting archive
+  - Installing danharrin/livewire-rate-limiting (v2.3.0): Extracting archive
+  - Installing composer/pcre (3.4.0): Extracting archive
+  - Installing composer/class-map-generator (1.8.0): Extracting archive
+  - Installing blade-ui-kit/blade-icons (1.10.1): Extracting archive
+  - Installing blade-ui-kit/blade-heroicons (2.7.0): Extracting archive
+  - Installing filament/support (v5.10.2): Extracting archive
+  - Installing openspout/openspout (v4.32.0): Extracting archive
+  - Installing league/csv (9.28.0): Extracting archive
+  - Installing filament/actions (v5.10.2): Extracting archive
+  - Installing filament/notifications (v5.10.2): Extracting archive
+  - Installing filament/schemas (v5.10.2): Extracting archive
+  - Installing filament/infolists (v5.10.2): Extracting archive
+  - Installing spatie/shiki-php (2.4.0): Extracting archive
+  - Installing scrivo/highlight.php (v9.18.1.10): Extracting archive
+  - Installing ueberdosis/tiptap-php (2.2.0): Extracting archive
+  - Installing danharrin/date-format-converter (v0.3.1): Extracting archive
+  - Installing filament/forms (v5.10.2): Extracting archive
+  - Installing anourvalar/eloquent-serialize (1.3.12): Extracting archive
+  - Installing filament/widgets (v5.10.2): Extracting archive
+  - Installing filament/query-builder (v5.10.2): Extracting archive
+  - Installing filament/tables (v5.10.2): Extracting archive
+  - Installing chillerlan/php-settings-container (3.3.0): Extracting archive
+  - Installing chillerlan/php-qrcode (5.0.5): Extracting archive
+  - Installing filament/filament (v5.10.2): Extracting archive
+  - Installing alfianm/filament-login-kit (v1.1.0): Extracting archive
+  - Installing crumbls/layup (v1.6.2): Extracting archive
+  - Installing spatie/image-optimizer (1.10.0): Extracting archive
+  - Installing spatie/temporary-directory (2.4.0): Extracting archive
+  - Installing spatie/image (3.9.7): Extracting archive
+  - Installing maennchen/zipstream-php (3.2.2): Extracting archive
+  - Installing spatie/laravel-medialibrary (11.23.9): Extracting archive
+  - Installing spatie/laravel-permission (6.25.0): Extracting archive
+  0/33 [>---------------------------]   0%
+ 10/33 [========>-------------------]  30%
+ 20/33 [================>-----------]  60%
+ 30/33 [=========================>--]  90%
+ 33/33 [============================] 100%
+10 package suggestions were added by new dependencies, use `composer suggest` to see details.
+Generating optimized autoload files
+> Illuminate\Foundation\ComposerScripts::postAutoloadDump
+> @php artisan package:discover --ansi
+
+ INFO Discovering packages. 
+
+ alfianm/filament-login-kit .. DONE
+ anourvalar/eloquent-serialize .. DONE
+ blade-ui-kit/blade-heroicons .. DONE
+ blade-ui-kit/blade-icons .. DONE
+ crumbls/layup .. DONE
+ filament/actions .. DONE
+ filament/filament .. DONE
+ filament/forms .. DONE
+ filament/infolists .. DONE
+ filament/notifications .. DONE
+ filament/query-builder .. DONE
+ filament/schemas .. DONE
+ filament/support .. DONE
+ filament/tables .. DONE
+ filament/widgets .. DONE
+ inertiajs/inertia-laravel .. DONE
+ kirschbaum-development/eloquent-power-joins .. DONE
+ laravel/boost .. DONE
+ laravel/mcp .. DONE
+ laravel/pail .. DONE
+ laravel/pao .. DONE
+ laravel/roster .. DONE
+ laravel/sail .. DONE
+ laravel/tinker .. DONE
+ laravel/wayfinder .. DONE
+ livewire/livewire .. DONE
+ nesbot/carbon .. DONE
+ nunomaduro/collision .. DONE
+ nunomaduro/termwind .. DONE
+ pestphp/pest-plugin-laravel .. DONE
+ ryangjchandler/blade-capture-directive .. DONE
+ spatie/laravel-medialibrary .. DONE
+ spatie/laravel-permission .. DONE
+
+117 packages you are using are looking for funding.
+Use the `composer fund` command to find out more!
+> @php artisan vendor:publish --tag=laravel-assets --ansi --force
+
+ INFO No publishable resources for tag [laravel-assets]. 
+
+> @php artisan boost:update --ansi
+Boost guidelines and skills updated successfully.
+No security vulnerability advisories found.
+E X I T : 0  
+ 

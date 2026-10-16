@@ -1,0 +1,163 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../../storage/layup-safelist.txt';
+
+/*
+ * Design tokens — PRD 4.1 (warna), 4.2 (tipografi), 4.3 (radius & shadow),
+ * 4.4 (spacing/container). Semua komponen wajib memakai token ini agar
+ * section baru tidak memerlukan perubahan layout global (PRD 8.3).
+ */
+@theme {
+    --font-sans:
+        'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+        'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-display:
+        'Plus Jakarta Sans', 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+    --color-primary: #176b45;
+    --color-primary-dark: #104b32;
+    --color-primary-light: #e7f3eb;
+    --color-accent: #b9d9a8;
+    --color-background: #ffffff;
+    --color-surface: #f7f9f6;
+    --color-foreground: #17251d;
+    --color-muted: #66736a;
+    --color-border: #e3e9e3;
+    --color-gold: #c6a45a;
+    --color-gold-light: #f4ecda;
+
+    /* Radius komponen — PRD 4.3. */
+    --radius-input: 0.5rem; /* 8px */
+    --radius-button: 0.625rem; /* 10px */
+    --radius-card: 0.875rem; /* 14px */
+    --radius-panel: 1.25rem; /* 20px */
+
+    /* Lebar konten utama — PRD 4.4. */
+    --container-content: 80rem; /* 1280px */
+
+    /* Shadow dipakai hemat; border lebih diutamakan. */
+    --shadow-soft:
+        0 1px 2px rgb(23 37 29 / 0.04), 0 12px 28px -16px rgb(23 37 29 / 0.18);
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+    }
+
+    body {
+        @apply bg-background font-sans text-foreground antialiased;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+        @apply font-display text-foreground;
+        text-wrap: balance;
+    }
+
+    p {
+        text-wrap: pretty;
+    }
+
+    :focus-visible {
+        @apply outline-2 outline-offset-2 outline-primary;
+    }
+
+    /* PRD 10 & 12: hormati preferensi pengurangan gerakan. */
+    @media (prefers-reduced-motion: reduce) {
+        html {
+            scroll-behavior: auto;
+        }
+
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
+    }
+}
+
+@layer components {
+    /*
+     * Tipografi konten dari CMS (rich text / detail berita). PRD 4.2:
+     * line-height 1.6-1.8 dan lebar baca nyaman.
+     */
+    .rich-text {
+        @apply text-base leading-relaxed text-foreground/90;
+    }
+
+    .rich-text > * + * {
+        @apply mt-4;
+    }
+
+    .rich-text h2 {
+        @apply mt-10 font-display text-2xl font-semibold text-foreground;
+    }
+
+    .rich-text h3 {
+        @apply mt-8 font-display text-xl font-semibold text-foreground;
+    }
+
+    .rich-text h4 {
+        @apply mt-6 font-display text-lg font-semibold text-foreground;
+    }
+
+    .rich-text ul {
+        @apply list-disc space-y-1.5 pl-5 marker:text-primary;
+    }
+
+    .rich-text ol {
+        @apply list-decimal space-y-1.5 pl-5 marker:text-primary;
+    }
+
+    .rich-text a {
+        @apply font-medium text-primary underline underline-offset-4 hover:text-primary-dark;
+    }
+
+    .rich-text strong {
+        @apply font-semibold text-foreground;
+    }
+
+    .rich-text blockquote {
+        @apply border-l-4 border-accent pl-4 text-muted italic;
+    }
+
+    .rich-text img {
+        @apply my-6 w-full rounded-card;
+    }
+
+    .rich-text figure {
+        @apply my-6;
+    }
+
+    .rich-text figcaption {
+        @apply mt-2 text-center text-sm text-muted;
+    }
+
+    .rich-text table {
+        @apply w-full border-collapse text-left text-sm;
+    }
+
+    .rich-text th,
+    .rich-text td {
+        @apply border border-border px-3 py-2;
+    }
+
+    .rich-text th {
+        @apply bg-surface font-semibold;
+    }
+
+    /* Wadah konten standar — PRD 4.4. */
+    .content-container {
+        @apply mx-auto w-full max-w-content px-4 sm:px-6 lg:px-8;
+    }
+}
