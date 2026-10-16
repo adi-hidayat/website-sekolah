@@ -137,21 +137,21 @@ onBeforeUnmount(() => {
         class="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/85"
     >
         <div
-            class="content-container flex h-16 items-center justify-between gap-4 lg:h-20"
+            class="content-container flex h-20 items-center justify-between gap-4 lg:h-24"
         >
             <Link
                 href="/"
-                class="flex items-center gap-3 rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                class="flex min-w-0 items-center gap-3 rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
                 <img
                     v-if="logo"
                     :src="logo"
                     :alt="schoolName"
-                    class="h-10 w-auto lg:h-11"
+                    class="h-16 w-auto max-w-[220px] shrink-0 object-contain sm:max-w-[300px] lg:h-20 lg:max-w-[360px]"
                 />
                 <span
                     v-else
-                    class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-lg font-bold text-white lg:h-11 lg:w-11"
+                    class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-primary text-xl font-bold text-white lg:h-16 lg:w-16"
                     aria-hidden="true"
                 >
                     {{ shortName.charAt(0).toUpperCase() }}
