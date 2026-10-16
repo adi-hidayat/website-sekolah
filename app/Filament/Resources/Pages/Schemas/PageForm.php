@@ -8,6 +8,7 @@ use App\Support\PageSections;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -85,18 +86,38 @@ class PageForm
                                 ])->columns(1),
                                 Builder\Block::make('card_grid')->label('Card Grid')->schema([
                                     TextInput::make('title')->label('Judul')->columnSpanFull(),
-                                    Textarea::make('cards')->label('Cards (JSON sederhana)')->rows(3)->columnSpanFull()
-                                        ->formatStateUsing(fn (mixed $state): ?string => PageSections::editableText($state)),
+                                    Repeater::make('cards')->label('Kartu')->columnSpanFull()
+                                        ->schema([
+                                            Select::make('icon')->label('Ikon')
+                                                ->options(PageSections::iconOptions())
+                                                ->default('sparkles'),
+                                            TextInput::make('title')->label('Judul'),
+                                            Textarea::make('description')->label('Deskripsi')->rows(2)->columnSpanFull(),
+                                            TextInput::make('url')->label('URL'),
+                                            TextInput::make('link_label')->label('Label Tautan'),
+                                        ])->columns(2)->addActionLabel('Tambah kartu')
+                                        ->itemLabel(fn (array $state): ?string => $state['title'] ?? null),
                                 ])->columns(1),
                                 Builder\Block::make('statistics')->label('Statistics')->schema([
-                                    Textarea::make('items')->label('Items (JSON: label,value)')->rows(3)->columnSpanFull()
-                                        ->formatStateUsing(fn (mixed $state): ?string => PageSections::editableText($state)),
+                                    Repeater::make('items')->label('Statistik')->columnSpanFull()
+                                        ->schema([
+                                            TextInput::make('label')->label('Label')->required(),
+                                            TextInput::make('value')->label('Nilai')->required(),
+                                        ])->columns(2)->addActionLabel('Tambah statistik')
+                                        ->itemLabel(fn (array $state): ?string => $state['label'] ?? null),
                                 ])->columns(1),
                                 Builder\Block::make('values')->label('Nilai & Karakter')->schema([
                                     TextInput::make('title')->label('Judul')->default('Nilai dan Karakter Islami')->columnSpanFull(),
                                     Textarea::make('description')->label('Deskripsi')->rows(2)->columnSpanFull(),
-                                    Textarea::make('items')->label('Items (JSON: icon,title,description)')->rows(4)->columnSpanFull()
-                                        ->formatStateUsing(fn (mixed $state): ?string => PageSections::editableText($state)),
+                                    Repeater::make('items')->label('Nilai')->columnSpanFull()
+                                        ->schema([
+                                            Select::make('icon')->label('Ikon')
+                                                ->options(PageSections::iconOptions())
+                                                ->default('sparkles'),
+                                            TextInput::make('title')->label('Judul'),
+                                            Textarea::make('description')->label('Deskripsi')->rows(2)->columnSpanFull(),
+                                        ])->columns(2)->addActionLabel('Tambah nilai')
+                                        ->itemLabel(fn (array $state): ?string => $state['title'] ?? null),
                                 ])->columns(1),
                                 Builder\Block::make('achievements')->label('Achievements')->schema([
                                     TextInput::make('title')->label('Judul')->default('Prestasi'),
@@ -147,8 +168,15 @@ class PageForm
                                     TextInput::make('maps_embed_url')->label('Maps Embed URL')->columnSpanFull(),
                                 ])->columns(2),
                                 Builder\Block::make('faq')->label('FAQ')->schema([
-                                    Textarea::make('items')->label('Items (JSON: q,a)')->rows(4)->columnSpanFull()
-                                        ->formatStateUsing(fn (mixed $state): ?string => PageSections::editableText($state)),
+                                    Repeater::make('items')->label('Pertanyaan')->columnSpanFull()
+                                        ->schema([
+                                            TextInput::make('q')->label('Pertanyaan')->required()->columnSpanFull(),
+                                            RichEditor::make('a')->label('Jawaban')->columnSpanFull()
+                                                ->fileAttachmentsDisk('public')
+                                                ->fileAttachmentsDirectory('pages/content')
+                                                ->fileAttachmentsVisibility('public'),
+                                        ])->addActionLabel('Tambah pertanyaan')
+                                        ->itemLabel(fn (array $state): ?string => $state['q'] ?? null),
                                 ])->columns(1),
                                 Builder\Block::make('custom_html')->label('Custom HTML (admin saja)')->schema([
                                     Textarea::make('html')->label('HTML tersanitasi')->rows(4)->columnSpanFull(),

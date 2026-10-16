@@ -64,15 +64,59 @@ it('maps stored sections to builder state and back without losing ids', function
         ->and($saved['sections'][2]['id'])->toBe('cta-3');
 });
 
-it('presents array data as editable text for textareas', function () {
-    expect(PageSections::editableText(null))->toBeNull()
-        ->and(PageSections::editableText([]))->toBeNull()
-        ->and(PageSections::editableText('baris 1'))
-        ->toBe('baris 1')
-        ->and(PageSections::editableText(['https://a.test/1.jpg', 'https://a.test/2.jpg']))
-        ->toBe("https://a.test/1.jpg\nhttps://a.test/2.jpg")
-        ->and(PageSections::editableText([['icon' => 'heart', 'title' => 'Adab']]))
-        ->toContain('"icon"');
+it('normalizes section record lists for repeater fields', function () {
+    $normalized = PageSections::normalize([
+        [
+            'id' => 'nilai',
+            'type' => 'values',
+            'data' => [
+                'items' => json_encode([
+                    ['icon' => 'heart', 'title' => 'Adab', 'description' => 'Akhlak mulia'],
+                ]),
+            ],
+        ],
+        [
+            'id' => 'faq',
+            'type' => 'faq',
+            'data' => ['items' => "Kapan dibuka?: Awal tahun\nApa jurusannya?: MIPA"],
+        ],
+    ]);
+
+    expect($normalized['sections'][0]['data']['items'])->toBe([
+        ['icon' => 'heart', 'title' => 'Adab', 'description' => 'Akhlak mulia'],
+    ])
+        ->and($normalized['sections'][1]['data']['items'])->toBe([
+            ['q' => 'Kapan dibuka?', 'a' => 'Awal tahun'],
+            ['q' => 'Apa jurusannya?', 'a' => 'MIPA'],
+        ]);
+});
+
+it('reindexes repeater record lists keyed by uuid', function () {
+    $stored = [
+        'version' => 1,
+        'sections' => [
+            ['id' => 'statistik', 'type' => 'statistics', 'data' => ['items' => [['label' => 'Siswa', 'value' => '100']]]],
+        ],
+    ];
+
+    $builder = [
+        [
+            'type' => 'statistics',
+            'data' => [
+                'items' => [
+                    '9dd4e461-2e1f-4f2f-9d2b-6ad1c4b1a0a1' => ['label' => 'Guru', 'value' => '20'],
+                    '9dd4e461-2e1f-4f2f-9d2b-6ad1c4b1a0a2' => ['label' => 'Siswa', 'value' => '200'],
+                ],
+            ],
+        ],
+    ];
+
+    $saved = PageSections::storedFromBuilderState($builder, $stored);
+
+    expect($saved['sections'][0]['data']['items'])->toBe([
+        ['label' => 'Guru', 'value' => '20'],
+        ['label' => 'Siswa', 'value' => '200'],
+    ]);
 });
 
 it('enforces unique slugs', function () {
@@ -103,6 +147,9 @@ it('opens the page edit form for wrapped builder sections', function () {
             'sections' => [
                 ['id' => 'hero', 'type' => 'hero', 'data' => ['title' => 'Halo', 'cta' => ['label' => 'Daftar', 'url' => '/spmb']]],
                 ['id' => 'nilai', 'type' => 'values', 'data' => ['title' => 'Nilai', 'items' => [['icon' => 'heart', 'title' => 'Adab']]]],
+                ['id' => 'statistik', 'type' => 'statistics', 'data' => ['items' => [['label' => 'Siswa', 'value' => '100']]]],
+                ['id' => 'pengurus', 'type' => 'card_grid', 'data' => ['title' => 'Pengurus', 'cards' => [['icon' => 'users', 'title' => 'Ketua', 'description' => 'Memimpin']]]],
+                ['id' => 'faq', 'type' => 'faq', 'data' => ['items' => json_encode([['q' => 'Kapan?', 'a' => '<p>Awal tahun</p>']])]],
             ],
         ],
     ]);

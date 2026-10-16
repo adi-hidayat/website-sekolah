@@ -12,6 +12,32 @@ class PageSections
     public const VERSION = 1;
 
     /**
+     * Ikon yang tersedia di komponen Vue AppIcon. Dipakai Select form agar
+     * admin tidak mengetik nama ikon yang tidak dikenal.
+     *
+     * @var list<string>
+     */
+    public const ICONS = [
+        'heart', 'academic-cap', 'shield-check', 'users', 'sparkles', 'book',
+        'beaker', 'building', 'trophy', 'star', 'globe', 'quote', 'image',
+        'user', 'check-circle', 'info', 'alert', 'clock', 'calendar',
+        'map-pin', 'phone', 'mail', 'link', 'search', 'play', 'share',
+    ];
+
+    /**
+     * Field data yang berupa daftar record (bukan hanya string) per tipe
+     * section. Nilainya adalah key yang dipertahankan saat normalisasi.
+     *
+     * @var array<string, array<string, list<string>>>
+     */
+    private const RECORD_LISTS = [
+        'card_grid' => ['cards' => ['icon', 'title', 'description', 'url', 'link_label']],
+        'statistics' => ['items' => ['label', 'value']],
+        'values' => ['items' => ['icon', 'title', 'description']],
+        'faq' => ['items' => ['q', 'a']],
+    ];
+
+    /**
      * @var array<string, array<string, mixed>>
      */
     public const TYPES = [
@@ -41,6 +67,16 @@ class PageSections
     public static function types(): array
     {
         return array_keys(self::TYPES);
+    }
+
+    /**
+     * Pilihan ikon untuk Select form (value = label = nama ikon AppIcon).
+     *
+     * @return array<string, string>
+     */
+    public static function iconOptions(): array
+    {
+        return array_combine(self::ICONS, self::ICONS);
     }
 
     /**
@@ -84,6 +120,14 @@ class PageSections
             // dan form admin konsisten.
             if (in_array($type, ['image_gallery', 'gallery'], true) && array_key_exists('images', $data)) {
                 $data['images'] = self::normalizeImageList($data['images']);
+            }
+
+            // Field daftar record memakai Repeater di form admin. Normalisasi
+            // warisan JSON/teks agar state Builder selalu array of record.
+            foreach (self::RECORD_LISTS[$type] ?? [] as $field => $keys) {
+                if (array_key_exists($field, $data)) {
+                    $data[$field] = self::normalizeRecordList($data[$field], $keys);
+                }
             }
 
             // Keamanan: jangan pernah simpan JS bebas dari CMS.
@@ -168,7 +212,8 @@ class PageSections
             ];
         }
 
-        // Lewatkan normalize() agar custom_html tersanitasi & bentuk konsisten.
+        // Lewatkan normalize() agar custom_html tersanitasi, daftar record
+        // di-reindex, dan bentuk payload konsisten.
         return self::normalize($merged);
     }
 
@@ -225,7 +270,7 @@ class PageSections
                     if ($trimmed !== '') {
                         $output[] = $trimmed;
                     }
-                } elseif (is_scalar($item) && $item !== null) {
+                } elseif (is_scalar($item)) {
                     $trimmed = trim((string) $item);
 
                     if ($trimmed !== '') {
@@ -240,19 +285,117 @@ class PageSections
                 }
             }
 
-            return array_values($output);
+            return $output;
         }
 
         return [];
     }
 
     /**
+     * Normalisasi daftar record section (cards/items/faq) menjadi array of
+     * record agar cocok dengan Repeater di form admin.
+     *
+     * Menerima bentuk warisan textarea: JSON string, "label: nilai" per
+     * baris, atau array objek/string. Record yang tidak relevan dibuang,
+     * dan key yang tidak dimodelkan form dipertahankan.
+     *
+     * @param  list<string>  $keys
+     * @return list<array<string, mixed>>
+     */
+    public static function normalizeRecordList(mixed $value, array $keys): array
+    {
+        if (is_string($value)) {
+            $trimmed = trim($value);
+
+            if ($trimmed === '') {
+                return [];
+            }
+
+            if (str_starts_with($trimmed, '[') || str_starts_with($trimmed, '{')) {
+                $decoded = json_decode($trimmed, true);
+
+                if (is_array($decoded)) {
+                    return self::normalizeRecordList($decoded, $keys);
+                }
+            }
+
+            return self::recordsFromText($trimmed, $keys);
+        }
+
+        if (! is_array($value)) {
+            return [];
+        }
+
+        $records = [];
+
+        foreach ($value as $item) {
+            if (is_array($item)) {
+                $record = [];
+
+                foreach ($item as $key => $field) {
+                    if (! is_string($key)) {
+                        continue;
+                    }
+
+                    if (is_scalar($field) || $field === null) {
+                        $record[$key] = $field === null ? null : (string) $field;
+                    }
+                }
+
+                if ($record !== []) {
+                    $records[] = $record;
+                }
+
+                continue;
+            }
+
+            if (is_string($item) && trim($item) !== '') {
+                $records = array_merge($records, self::recordsFromText(trim($item), $keys));
+            }
+        }
+
+        return $records;
+    }
+
+    /**
+     * Ubah teks warisan "label: nilai" / satu nilai per baris menjadi record.
+     *
+     * @param  list<string>  $keys
+     * @return list<array<string, mixed>>
+     */
+    private static function recordsFromText(string $text, array $keys): array
+    {
+        $records = [];
+
+        foreach (preg_split('/\r?\n/', $text) ?: [] as $line) {
+            $line = trim($line);
+
+            if ($line === '') {
+                continue;
+            }
+
+            $separator = str_contains($line, ':') ? ':' : '|';
+            $parts = array_map('trim', explode($separator, $line));
+
+            $record = [];
+            foreach ($keys as $index => $key) {
+                $record[$key] = $parts[$index] ?? '';
+            }
+
+            $records[] = $record;
+        }
+
+        return $records;
+    }
+
+    /**
      * Gabung data section lama dengan input Builder baru.
      *
-     * Key yang tidak dimodelkan di form dipertahankan, tetapi list
-     * berurutan (mis. images dari FileUpload multiple) diganti utuh agar
-     * hapus/reorder benar-benar tersimpan. array_replace_recursive
-     * mempertahankan sisa item lama berdasarkan indeks numerik.
+     * Key yang tidak dimodelkan di form dipertahankan, tetapi list berurutan
+     * (mis. images dari FileUpload multiple) dan daftar record dari Repeater
+     * diganti utuh agar hapus/reorder benar-benar tersimpan.
+     * array_replace_recursive mempertahankan sisa item lama berdasarkan
+     * indeks numerik.
      *
      * @param  array<string, mixed>  $previous
      * @param  array<string, mixed>  $current
@@ -264,14 +407,15 @@ class PageSections
 
         foreach ($current as $key => $value) {
             if (is_array($value) && array_is_list($value)) {
-                $merged[$key] = array_values($value);
+                $merged[$key] = $value;
 
                 continue;
             }
 
-            if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])
-                && ! array_is_list($merged[$key]) && ! array_is_list($value)) {
-                $merged[$key] = array_replace_recursive($merged[$key], $value);
+            if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
+                $merged[$key] = self::isAssocList($value)
+                    ? $value
+                    : array_replace_recursive($merged[$key], $value);
 
                 continue;
             }
@@ -283,42 +427,24 @@ class PageSections
     }
 
     /**
-     * Sajikan data array (items/images/cards) sebagai teks yang bisa diedit
-     * di Textarea: daftar skalar jadi satu-per-baris, sisanya JSON pretty.
+     * Deteksi list record yang di-key UUID oleh Repeater Filament
+     * (semua nilainya array, bukan scalar), sehingga bisa diganti utuh.
+     *
+     * @param  array<array-key, mixed>  $value
      */
-    public static function editableText(mixed $value): ?string
+    private static function isAssocList(array $value): bool
     {
-        if ($value === null || $value === '') {
-            return null;
+        if ($value === [] || array_is_list($value)) {
+            return false;
         }
 
-        if (is_string($value)) {
-            return $value;
+        foreach ($value as $item) {
+            if (! is_array($item)) {
+                return false;
+            }
         }
 
-        if (is_array($value)) {
-            if ($value === []) {
-                return null;
-            }
-
-            $scalarsOnly = true;
-            foreach ($value as $item) {
-                if (! is_scalar($item) && $item !== null) {
-                    $scalarsOnly = false;
-                    break;
-                }
-            }
-
-            if ($scalarsOnly) {
-                return implode("\n", array_map(fn ($item): string => (string) $item, $value));
-            }
-
-            $json = json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE);
-
-            return is_string($json) ? $json : null;
-        }
-
-        return null;
+        return true;
     }
 
     /**
